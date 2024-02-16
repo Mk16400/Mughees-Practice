@@ -1,0 +1,51 @@
+name: Automate Deployment
+
+on:
+  push:
+    branches:
+      - main
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout Repository
+        uses: actions/checkout@v2
+
+      - name: Setup Node.js
+        uses: actions/setup-node@v2
+        with:
+          node-version: 18
+
+      - name: Install Dependencies
+        run: npm install
+
+      - name: Build Next.js App
+        run: npm run build
+
+  deploy:
+    needs: build
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Deploy to cPanel
+        uses: appleboy/ssh-action@master
+        with:
+          host: ${{ secrets.CPANEL_HOST }}
+          username: ${{ secrets.CPANEL_USERNAME }}
+          password: ${{ secrets.CPANEL_PASSWORD }}
+          port: -
+          script: |
+            export TERM=xterm
+            cd /path/to/my/project/
+
+            # Pull the latest changes
+            git reset --hard
+            git pull origin main
+
+            # Install dependencies
+            npm install
+
+            # Build the Next.js app
+            npm run build
