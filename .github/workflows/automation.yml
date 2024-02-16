@@ -35,10 +35,10 @@ jobs:
           host: ${{ secrets.CPANEL_HOST }}
           username: ${{ secrets.CPANEL_USERNAME }}
           password: ${{ secrets.CPANEL_PASSWORD }}
-          port: -
+          port: 17177
           script: |
             export TERM=xterm
-            cd /path/to/my/project/
+            cd /home/cedrics/mugheeswork.cedrics.se
 
             # Pull the latest changes
             git reset --hard
